@@ -16,7 +16,11 @@ export default function CustomFooter() {
   return (
     <View style={styles.container}>
       {tabs.map((tab, index) => {
-        const focused = (segments[2] ?? '') === tab.name;
+        // для учета выделения footer
+        const isInTabs = segments[1] === '(tabs)';
+        const currentTab = isInTabs ? (segments[2] ?? '') : null;
+        const focused = currentTab === tab.name;
+
         return (
           <TouchableOpacity
             key={index}
@@ -25,7 +29,7 @@ export default function CustomFooter() {
                 const route = tab.name
                   ? `/(main)/(tabs)/${tab.name}`
                   : '/(main)/(tabs)';
-                router.push(route);
+                router.push(route as never);
               }
             }}
           >
