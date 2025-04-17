@@ -1,17 +1,22 @@
 // components/CustomHeader.tsx
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 
 import { icons } from '@/constants/icons'; // или куда ты положил иконку
 
 export default function CustomHeader() {
   const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => router.push('./../settings')}
+        onPress={() => {
+          if (!pathname.includes('settings')) {
+            router.push('/(main)/settings');
+          }
+        }}
         style={styles.iconWrapper}
       >
         <Image

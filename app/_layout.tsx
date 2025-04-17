@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as NavigationBar from 'expo-navigation-bar';
-import { Slot, Stack } from 'expo-router';
+import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
 import LoadingScreen from './loading';
@@ -24,8 +24,7 @@ export default function RootLayout() {
           <StatusBar
             backgroundColor="#67BCB2" // Цвет для верхней панели
           />
-          {/* Нижняя панель, делаем с цветом фона как у приложения */}
-          <Stack screenOptions={{ headerShown: false }} />
+          <Slot />
         </View>
       )}
     </SafeAreaProvider>
