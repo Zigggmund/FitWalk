@@ -12,6 +12,7 @@ import weatherSnowy from '@/assets/icons/weather/snow.png';
 import weatherSunny from '@/assets/icons/weather/sun.png';
 import weatherThunder from '@/assets/icons/weather/thunder.png';
 import weatherWindy from '@/assets/icons/weather/wind.png';
+import startRoute from '@/assets/icons/startRoute.png';
 
 export const icons = {
   logo,
@@ -22,6 +23,7 @@ export const icons = {
   settings,
   editIcon,
   deleteIcon,
+  startRoute,
 
   weatherSunny,
   weatherCloudy,

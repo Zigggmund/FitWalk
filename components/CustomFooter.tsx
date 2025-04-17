@@ -1,28 +1,31 @@
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { usePathname, useRouter } from 'expo-router';
+import { useRouter, useSegments } from 'expo-router';
 
 import { icons } from '@/constants/icons';
 
 const tabs = [
-  { name: '/(main)/(tabs)/map', icon: icons.map, size: 50 },
-  { name: '/(main)/(tabs)/index', icon: icons.home, size: 80 },
-  { name: '/(main)/(tabs)/weather', icon: icons.weather, size: 60 },
+  { name: 'map', icon: icons.map, size: 50 },
+  { name: '', icon: icons.home, size: 80 },
+  { name: 'weather', icon: icons.weather, size: 60 },
 ] as const;
 
 export default function CustomFooter() {
   const router = useRouter();
-  const pathname = usePathname();
+  const segments = useSegments(); // ['(main)', '(tabs)', 'map'] и т.п.
 
   return (
     <View style={styles.container}>
       {tabs.map((tab, index) => {
-        const focused = pathname.includes(tab.name);
+        const focused = (segments[2] ?? '') === tab.name;
         return (
           <TouchableOpacity
             key={index}
             onPress={() => {
               if (!focused) {
-                router.push(tab.name);
+                const route = tab.name
+                  ? `/(main)/(tabs)/${tab.name}`
+                  : '/(main)/(tabs)';
+                router.push(route);
               }
             }}
           >
