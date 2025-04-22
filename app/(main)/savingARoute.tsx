@@ -1,13 +1,14 @@
 import React from 'react';
 import { View } from 'react-native';
+
 import SText from '@/components/ui/CustomFontText/SText';
 
-const Map = () => {
+const SavingARoute = () => {
   return (
     <View>
-      <SText>Map</SText>
+      <SText>SavingARoute</SText>
     </View>
   );
 };
 
-export default Map;
+export default SavingARoute;

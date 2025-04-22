@@ -1,9 +1,10 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import SText from '@/components/ui/CustomFontText/SText';
 
 export default function SettingsScreen() {
   return (
     <View>
-      <Text>Настройки</Text>
+      <SText>Настройки</SText>
     </View>
   );
 }
