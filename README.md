@@ -16,22 +16,6 @@ eas login
 :: настройка
 eas build:configure
 
-:: команда для создания eas.json с профилем preview:
-echo {
-  "build": {
-    "preview": {
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "production": {
-      "android": {
-        "buildType": "app-bundle"
-      }
-    }
-  }
-} > eas.json
-
 :: Запуск
 eas build -p android --profile preview
 
