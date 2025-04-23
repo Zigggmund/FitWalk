@@ -1,5 +1,7 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
+import SText from '@/components/ui/CustomFontText/SText';
+import { colors } from '@/constants/colors';
 import { images } from '@/constants/images';
 
 interface LoadingScreenProps {
@@ -11,7 +13,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress }) => {
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress} style={styles.wrapper}>
         <View style={styles.label}>
-          <Text style={styles.text}>Приветствуем!</Text>
+          <SText style={styles.text}>Приветствуем!</SText>
         </View>
       </TouchableOpacity>
       <Image source={images.welcome} style={styles.image} resizeMode="cover" />
@@ -33,17 +35,18 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   label: {
+    borderWidth: 3,
+    borderRadius: 20,
+    borderColor: colors.black,
     position: 'absolute',
-    top: 80,
+    top: 60,
     alignSelf: 'center',
     paddingHorizontal: 20,
     paddingVertical: 8,
-    borderRadius: 10,
-    backgroundColor: '#67BCB2', // Пример фона для текста
+    backgroundColor: colors.green.textBlock, // Пример фона для текста
   },
   text: {
-    color: 'white',
-    fontSize: 22,
+    fontSize: 32,
   },
   wrapper: {
     zIndex: 1,

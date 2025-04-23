@@ -1,13 +1,32 @@
 import React from 'react';
-import { View } from 'react-native';
-import SText from '@/components/ui/CustomFontText/SText';
+import { ImageBackground, StyleSheet, View } from 'react-native';
 
-const Map = () => {
+import { images } from '@/constants/images';
+
+const RouteWeatherMap = () => {
   return (
-    <View>
-      <SText>Map</SText>
-    </View>
+    <ImageBackground style={styles.container} source={images.mapAllRoutes}>
+      <View></View>
+    </ImageBackground>
+    // <MapView
+    //   style={{ flex: 1 }}
+    //   initialRegion={{
+    //     latitude: 56.01,
+    //     longitude: 92.87,
+    //     latitudeDelta: 0.05,
+    //     longitudeDelta: 0.05,
+    //   }}
+    // >
+    //   {/* Маркеры или путь маршрута */}
+    //   <Marker coordinate={{ latitude: 56.01, longitude: 92.87 }} />
+    // </MapView>
   );
 };
 
-export default Map;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
+export default RouteWeatherMap;

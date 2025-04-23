@@ -2,7 +2,7 @@ import { Route } from '@/types/routes';
 
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 import SText from '@/components/ui/CustomFontText/SText';
 import { colors } from '@/constants/colors'; // импорт цветов
@@ -19,14 +19,13 @@ const RouteItem = ({ route, isMainPage = true }: RouteItemProps) => {
     <Pressable
       style={({ pressed }) => [
         styles.block,
-        pressed && {opacity: 0.6}, // если элемент нажат, применяем стиль pressed
+        pressed && { opacity: 0.6 }, // если элемент нажат, применяем стиль pressed
       ]}
       onPress={() =>
         router.push(
           isMainPage ? `/routes/${route.id}` : `/routes/weather/${route.id}`,
         )
       }
-
     >
       <SText style={styles.text}>{route.title}</SText>
     </Pressable>

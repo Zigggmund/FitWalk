@@ -1,31 +1,39 @@
-import { Route } from '@/types/routes';
+import { Route } from '@/types/routes'; // импорт цветов
 
 import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 
 import SText from '@/components/ui/CustomFontText/SText';
-import { colors } from '@/constants/colors'; // импорт цветов
+import { colors } from '@/constants/colors';
 
 type RouteItemProps = {
   route: Route;
   isMainPage?: boolean;
 };
 
-const RouteItem = ({ route, isMainPage = true }: RouteItemProps) => {
-  const router = useRouter();
+const RouteItemOld = ({ route, isMainPage = true }: RouteItemProps) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handlePress = () => {
+    if (isLoading) return; // Не даем переходить, пока идет переход
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false); // Разрешаем переходы после задержки
+    }, 500); // Это 500мс - ты можешь подстроить под свои нужды
+  };
 
   return (
-    <Pressable
+    <Link
+      href={isMainPage ? `/routes/${route.id}` : `/routes/weather/${route.id}`}
+      asChild
       style={styles.block}
-      onPress={() =>
-        router.push(
-          isMainPage ? `/routes/${route.id}` : `/routes/weather/${route.id}`,
-        )
-      }
     >
-      <SText style={styles.text}>{route.title}</SText>
-    </Pressable>
+      <Pressable onPress={handlePress}>
+        <SText style={styles.text}>{route.title}</SText>
+      </Pressable>
+    </Link>
   );
 };
 
@@ -49,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RouteItem;
+export default RouteItemOld;

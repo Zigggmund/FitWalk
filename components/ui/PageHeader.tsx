@@ -1,14 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
+import SText from '@/components/ui/CustomFontText/SText';
 import { colors } from '@/constants/colors';
 
 type PageHeaderProps = {
-  children: React.ReactNode; // Позволяет передавать любые вложенные элементы
+  text: string;
 };
 
-const PageHeader = ({ children }: PageHeaderProps) => {
-  return <View style={styles.container}>{children}</View>;
+const PageHeader = ({ text }: PageHeaderProps) => {
+  return (
+    <View style={styles.container}>
+      <SText style={styles.header}>{text}</SText>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -17,6 +22,11 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     borderRadius: 20,
     backgroundColor: colors.green.textBlock,
+  },
+  header: {
+    fontSize: 36,
+    textAlign: 'center',
+    paddingVertical: 15,
   },
 });
 

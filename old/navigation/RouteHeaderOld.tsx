@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 import SText from '@/components/ui/CustomFontText/SText';
 import { colors } from '@/constants/colors';

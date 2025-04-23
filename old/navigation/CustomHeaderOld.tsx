@@ -10,7 +10,7 @@ const headerTabs = [
   { name: 'settings', icon: icons.settings, height: 40 },
 ] as const;
 
-export default function CustomHeader() {
+export default function CustomHeaderOld() {
   const router = useRouter();
   const segments = useSegments(); // ['(main)', '(headerTabs)', 'map'] и т.п.
 

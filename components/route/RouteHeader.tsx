@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
 
 import SText from '@/components/ui/CustomFontText/SText';
@@ -17,7 +17,10 @@ const RouteHeader = ({
   routeLength,
 }: RouteHeaderProps) => {
   return (
-    <Link href={isMainPage ? '/(main)/(tabs)' : '/(main)/(tabs)/weather'} asChild>
+    <Link
+      href={isMainPage ? '/(main)/(tabs)' : '/(main)/(tabs)/weather'}
+      asChild
+    >
       <TouchableOpacity>
         <View style={styles.wrapper}>
           <View style={styles.block}>

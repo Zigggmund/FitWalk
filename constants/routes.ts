@@ -3,7 +3,7 @@ import { Route } from '@/types/routes';
 export const routes: Route[] = [
   {
     id: 1,
-    title: 'Центральная прогулка',
+    title: 'Центр',
     description:
       'Маршрут по центральной части города от театра оперы до набережной Енисея.',
     travelTime: 30,
@@ -20,7 +20,7 @@ export const routes: Route[] = [
   },
   {
     id: 2,
-    title: 'Тропа к Столбам',
+    title: 'Тропа к Столбам (длинный маршрут)',
     description:
       'Походный маршрут от центрального входа в заповедник "Столбы" к Первому Столбу.',
     travelTime: 120,
