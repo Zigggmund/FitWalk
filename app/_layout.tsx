@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { exception } from '@expo/fingerprint/cli/build/utils/log';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -12,6 +13,7 @@ import LoadingScreen from './loading';
 
 // Используем import, но загружаем через Asset.fromModule
 import SensationFont from '@/assets/fonts/Sansation-Regular.ttf';
+import { checkDatabase, initDatabase } from '@/services/db';
 
 // для шрифта
 SplashScreen.preventAutoHideAsync();
@@ -45,6 +47,15 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]); // Убедись, что NavigationBar изменяется только после загрузки шрифта
 
+  // инициализация и проверка бд
+  try {
+    initDatabase();
+  } catch (err) {
+    console.log('Ошибка при загрузке базы данных:', err);
+  }
+  checkDatabase();
+
+  // загрузочный экран
   if (!fontsLoaded || !isAppReady) {
     return <LoadingScreen onPress={() => setIsAppReady(true)} />;
   }

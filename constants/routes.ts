@@ -17,6 +17,7 @@ export const routes: Route[] = [
       { latitude: 56.0108, longitude: 92.8673 },
       { latitude: 56.010364, longitude: 92.87306 },
     ],
+    isRecording: false,
   },
   {
     id: 2,
@@ -34,6 +35,7 @@ export const routes: Route[] = [
       { latitude: 55.992, longitude: 92.735 },
       { latitude: 55.9971, longitude: 92.7344 },
     ],
+    isRecording: false,
   },
   {
     id: 3,
@@ -51,6 +53,7 @@ export const routes: Route[] = [
       { latitude: 56.0137, longitude: 92.8693 },
       { latitude: 56.0156, longitude: 92.8705 },
     ],
+    isRecording: false,
   },
   {
     id: 4,
@@ -69,5 +72,6 @@ export const routes: Route[] = [
       { latitude: 56.0168, longitude: 92.854 },
       { latitude: 56.0138, longitude: 92.8552 },
     ],
+    isRecording: false,
   },
 ];

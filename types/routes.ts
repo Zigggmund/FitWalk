@@ -7,6 +7,7 @@ export interface Route {
   startPoint: LatLng;
   endPoint: LatLng;
   path: LatLng[]; // Полный маршрут
+  isRecording: boolean;
 }
 
 // координата
