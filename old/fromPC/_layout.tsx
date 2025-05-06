@@ -38,6 +38,8 @@ const RootLayout = () => {
         await SplashScreen.hideAsync();
       } catch (error) {
         console.error('Ошибка при загрузке ресурсов', error);
+      } finally {
+        setIsAppReady(true);
       }
     };
 
