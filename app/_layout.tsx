@@ -4,14 +4,14 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import * as NavigationBar from 'expo-navigation-bar';
-import { Slot } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
+import { Slot, SplashScreen } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
 import LoadingScreen from './loading';
 
 import SensationFont from '@/assets/fonts/Sansation-Regular.ttf';
 import { checkDatabase, initDatabase } from '@/services/db';
+import { testDb} from '@/services/routeRepository';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,6 +32,9 @@ const RootLayout = () => {
         // Инициализация БД
         console.log('Инициализация базы данных...');
         await initDatabase();
+        // УДАЛИТЬ, для тестов
+        await testDb();
+
         await checkDatabase();
         setDbInitialized(true);
 

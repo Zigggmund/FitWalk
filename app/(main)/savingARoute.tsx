@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import CompositeInput from '@/components/ui/CompositeInput';
 import SText from '@/components/ui/CustomFontText/SText';
@@ -15,18 +15,73 @@ import GreenButton from '@/components/ui/GreenButton';
 import PageHeader from '@/components/ui/PageHeader';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
-import { routes } from '@/constants/routes';
+import { useLocation } from '@/hooks/LocationContext';
+import { RoutePoint} from '@/types/routes';
+
+import { insertRoute, addRoutePoints } from '@/services/routeRepository';
 
 const SavingARoute = () => {
-  const route = routes[0];
   const router = useRouter();
+  const params = useLocalSearchParams();
+  const { locations, clearLocations } = useLocation();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  // менять поле
   const [travelTime, setTravelTime] = useState(
-    `${route.travelTime.toString()} минут`,
+    params.time ? `${Math.floor(Number(params.time) / 60)}` : '0',
   );
+
+  const handleSave = async () => {
+    if (!name.trim()) {
+      Alert.alert('Ошибка', 'Укажите название маршрута');
+      return;
+    }
+    const numValue = parseInt(travelTime, 10);
+    if (isNaN(numValue)) {
+      Alert.alert('Ошибка', 'Время должно быть числом');
+      return;
+    }
+    if (numValue <= 0) {
+      Alert.alert('Ошибка', 'Время должно быть больше 0');
+      return false;
+    }
+    console.log(numValue)
+    console.log(travelTime)
+    console.log(name)
+    console.log(description)
+    console.log()
+
+    try {
+      // Сохраняем маршрут
+      const routeId = await insertRoute({
+        title: name,
+        description: description.trim(),
+        travelTime: Number(params.time),
+        length: Number(params.distance),
+      });
+
+      // Сохраняем точки с явным указанием типа
+      const points: RoutePoint[] = locations.map((loc, i) => ({
+        routeId,
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+        pointType: (
+          i === 0 ? 'start' :
+            i === locations.length - 1 ? 'end' : 'path'
+        ) as 'start' | 'end' | 'path', // Явное приведение типа
+        timestamp: Math.floor(Date.now() / 1000),
+      }));
+
+      await addRoutePoints(points);
+
+      clearLocations();
+      Alert.alert('Успех', 'Маршрут сохранен');
+      router.push('/');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Ошибка', 'Не удалось сохранить маршрут');
+    }
+  };
 
   return (
     <ScrollView>
@@ -42,51 +97,45 @@ const SavingARoute = () => {
         isSmall={true}
         value={description}
         onChangeText={setDescription}
+        multiline
       />
       <CompositeInput
-        label={'Время прохождения'}
+        label={'Время прохождения (минуты)'}
+        isSmall={true}
         value={travelTime}
         onChangeText={setTravelTime}
-        isSmall={true}
       />
       <CompositeInput
-        label={'Длина маршрута'}
-        value={`${route.length} метров`}
+        label={'Длина маршрута (метры)'}
+        value={`${params.distance || 0}`}
         disable
         isSmall={true}
       />
-      <GreenButton onPress={() => router.push('/map')}>
+
+      <GreenButton onPress={() => routeId && router.push(`/route-details?routeId=${routeId}`)}>
         <View style={styles.buttonContainer}>
-          <SText style={styles.mapButtonText}>Посмотреть на карте</SText>
+          <SText style={styles.mapButtonText}>Посмотреть маршрут</SText>
           <Image style={styles.buttonImage} source={icons.map} />
         </View>
       </GreenButton>
 
       <View style={[styles.buttonContainer, { paddingRight: 30 }]}>
-        <GreenButton onPress={() => router.push('/')}>
+        <GreenButton onPress={handleSave}>
           <SText style={styles.saveButtonText}>Сохранить</SText>
         </GreenButton>
         <TouchableOpacity
-          onPress={() => {
-            Alert.alert(
-              'Удаление маршрута',
-              'Вы уверены, что хотите удалить маршрут?',
-              [
-                {
-                  text: 'Отмена',
-                  style: 'cancel',
+          onPress={() =>
+            Alert.alert('Удаление маршрута', 'Весь прогресс будет потерян', [
+              { text: 'Отмена' },
+              {
+                text: 'Удалить',
+                onPress: () => {
+                  clearLocations();
+                  router.push('/');
                 },
-                {
-                  text: 'Удалить',
-                  onPress: () => {
-                    router.push('/'); // переход на главную страницу
-                  },
-                  style: 'destructive',
-                },
-              ],
-              { cancelable: true },
-            );
-          }}
+              },
+            ])
+          }
         >
           <Image style={styles.delete} source={icons.deleteIcon} />
         </TouchableOpacity>

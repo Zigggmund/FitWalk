@@ -1,17 +1,21 @@
 export interface Route {
+  id?: number;
+  title: string;
+  description?: string;
+  travelTime?: number;
+  length?: number;
+};
+
+export interface RoutePoint {
+  routeId: number;
+  latitude: number;
+  longitude: number;
+  pointType: 'start' | 'end' | 'path';
+  timestamp?: number;
+};
+
+export interface RouteWithPoints {
   id: number;
   title: string;
-  description: string;
-  travelTime: number; // минуты, in POSTRESQL type=interval
-  length: number; // метры
-  startPoint: LatLng;
-  endPoint: LatLng;
-  path: LatLng[]; // Полный маршрут
-  isRecording: boolean;
-}
-
-// координата
-export interface LatLng {
-  latitude: number; // широта
-  longitude: number; // долгота
+  points: RoutePoint[];
 }

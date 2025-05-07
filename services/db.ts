@@ -16,6 +16,13 @@ export const initDatabase = async () => {
 
     // Создаем таблицы
     await db.execAsync(`
+      CREATE TABLE IF NOT EXISTS app_settings (
+        key TEXT PRIMARY KEY,
+        value TEXT DEFAULT NULL
+      );
+      INSERT OR IGNORE INTO app_settings (key, value)
+        VALUES ('language', 'en');
+
       CREATE TABLE IF NOT EXISTS routes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
@@ -33,7 +40,6 @@ export const initDatabase = async () => {
         pointType TEXT CHECK(pointType IN ('start', 'end', 'path')) NOT NULL,
         FOREIGN KEY(routeId) REFERENCES routes(id) ON DELETE CASCADE
       );
-
       CREATE INDEX IF NOT EXISTS idx_route_points_routeId 
       ON route_points(routeId);
     `);
