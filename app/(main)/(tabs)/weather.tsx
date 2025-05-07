@@ -1,32 +1,55 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View, PermissionsAndroid } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 
 import RouteItem from '@/components/route/RouteItem';
 import Line from '@/components/ui/parts/Line';
 import { WeatherPanel } from '@/components/WeatherPanel';
-import { Route } from '@/types/routes';
 import { getAllRoutes } from '@/services/routeRepository';
 import SText from '@/components/ui/CustomFontText/SText';
+import { getCurrentWeather } from '@/services/weatherService';
+import { RouteWithPoints } from '@/types/routes';
 
 const Weather = () => {
-  const [routes, setRoutes] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<RouteWithPoints[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null);
 
   useEffect(() => {
-    const loadRoutes = async () => {
+    const loadData = async () => {
       try {
+        // Запрашиваем разрешение на геолокацию
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        );
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          Geolocation.getCurrentPosition(
+            async (position) => {
+              const { latitude, longitude } = position.coords;
+              const weather = await getCurrentWeather(latitude, longitude);
+              setCurrentWeather(weather);
+            },
+            (error) => {
+              console.error('Error getting location:', error);
+              setError('Не удалось определить местоположение');
+            }
+          );
+        }
+
+        // Загружаем маршруты
         const data = await getAllRoutes();
         setRoutes(data);
       } catch (err) {
-        setError('Не удалось загрузить маршруты');
+        setError('Не удалось загрузить данные');
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    loadRoutes();
+    loadData();
   }, []);
 
   if (loading) {

@@ -207,3 +207,43 @@ export const testDb = async () => {
     console.error('Ошибка при добавлении тестовых данных:', error);
   }
 };
+
+// Обновление данных маршрута
+export const updateRoute = async (
+  id: number,
+  route: Partial<Route>
+): Promise<Route> => {
+  const db = getDatabase();
+
+  try {
+    // Выполняем обновление маршрута
+    await db.runAsync(
+      `UPDATE routes 
+       SET title = ?, 
+           description = ?, 
+           travelTime = ?, 
+           length = ?
+       WHERE id = ?`,
+      route.title,
+      route.description || null,
+      route.travelTime || null,
+      route.length || null,
+      id
+    );
+
+    // Получаем обновленный маршрут из базы данных
+    const updatedRoute = await db.getFirstAsync<Route>(
+      'SELECT * FROM routes WHERE id = ?',
+      id
+    );
+
+    if (!updatedRoute) {
+      throw new Error('Маршрут не найден после обновления');
+    }
+
+    return updatedRoute;
+  } catch (error) {
+    console.error('Ошибка при обновлении маршрута:', error);
+    throw error;
+  }
+};

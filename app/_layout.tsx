@@ -33,7 +33,7 @@ const RootLayout = () => {
         console.log('Инициализация базы данных...');
         await initDatabase();
         // УДАЛИТЬ, для тестов
-        await testDb();
+        // await testDb();
 
         await checkDatabase();
         setDbInitialized(true);

@@ -2,6 +2,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
 
 import { icons } from '@/constants/icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const tabs = [
   { name: 'map', icon: icons.map, size: 50 },
@@ -12,11 +13,17 @@ const tabs = [
 export default function CustomFooter() {
   const router = useRouter();
   const segments = useSegments(); // ['(main)', '(tabs)', 'map'] и т.п.
+  const insets = useSafeAreaInsets()
 
   return (
-    <View style={styles.container}>
+    <View style={[
+      styles.container,
+      {
+        paddingBottom: insets.bottom,
+        backgroundColor: '#67BCB2',
+      }
+    ]}>
       {tabs.map((tab, index) => {
-        // для учета выделения footer
         const isInTabs = segments[1] === '(tabs)';
         const currentTab = isInTabs ? (segments[2] ?? '') : null;
         const focused = currentTab === tab.name;
@@ -32,6 +39,7 @@ export default function CustomFooter() {
                 router.push(route as never);
               }
             }}
+            style={styles.tabButton}
           >
             <Image
               source={tab.icon}
@@ -40,6 +48,7 @@ export default function CustomFooter() {
                 width: tab.size,
                 tintColor: focused ? '#000' : '#fff',
               }}
+              resizeMode="contain"
             />
           </TouchableOpacity>
         );
@@ -50,10 +59,16 @@ export default function CustomFooter() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 80,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#67BCB2',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.1)',
+  },
+  tabButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
 });

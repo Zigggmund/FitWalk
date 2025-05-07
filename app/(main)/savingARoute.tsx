@@ -57,7 +57,7 @@ const SavingARoute = () => {
         title: name,
         description: description.trim(),
         travelTime: Number(params.time),
-        length: Number(params.distance),
+        length: 1000, // Number(params.distance),
       });
 
       // Сохраняем точки с явным указанием типа
@@ -126,7 +126,6 @@ const SavingARoute = () => {
         <TouchableOpacity
           onPress={() =>
             Alert.alert('Удаление маршрута', 'Весь прогресс будет потерян', [
-              { text: 'Отмена' },
               {
                 text: 'Удалить',
                 onPress: () => {
@@ -134,6 +133,7 @@ const SavingARoute = () => {
                   router.push('/');
                 },
               },
+              { text: 'Отмена' },
             ])
           }
         >
