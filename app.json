@@ -32,7 +32,13 @@
       }
     },
     "plugins": [
-      "expo-sqlite"
-    ]
+      "expo-sqlite",
+      ["expo-router", { "asyncRoutes": false }]
+    ],
+    "expo": {
+      "plugins": [
+
+      ]
+    }
   }
 }
