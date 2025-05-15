@@ -8,8 +8,10 @@ import GreenButton from '@/components/ui/GreenButton';
 import StartTimeModal from '@/components/weather/StartTimeModal';
 import { WeatherPanel } from '@/components/WeatherPanel';
 import { routes } from '@/constants/routes';
+import { useLanguage } from '@/context/LanguageContext';
 
 const RouteWeatherDetails = () => {
+  const { l } = useLanguage();
   const { id } = useLocalSearchParams();
   const route = routes.find(route => route.id == Number(id));
 
@@ -80,10 +82,10 @@ const RouteWeatherDetails = () => {
         routeTitle={route.title}
       />
       <GreenButton onPress={() => setModalVisible(true)}>
-        <SText style={styles.btnText}>Задать стартовое время</SText>
+        <SText style={styles.btnText}>{l.btnSetStartTime}</SText>
       </GreenButton>
 
-      <SText style={styles.header}>Старт</SText>
+      <SText style={styles.header}>{l.start}</SText>
       <View style={styles.timeContainer}>
         <SText style={styles.time}>({formatDate(startTime)}</SText>
         <SText style={styles.time}>-</SText>
@@ -91,7 +93,7 @@ const RouteWeatherDetails = () => {
       </View>
       <WeatherPanel temperature={14} wind={13} weatherType={'thunder'} />
 
-      <SText style={styles.header}>Финиш</SText>
+      <SText style={styles.header}>{l.finish}</SText>
       <View style={styles.timeContainer}>
         <SText style={styles.time}>({formatDate(finishTime)}</SText>
         <SText style={styles.time}>-</SText>

@@ -1,6 +1,6 @@
 export interface Route {
   id?: number;
-  title: string;
+  title?: string;
   description?: string;
   travelTime?: number;
   length?: number;

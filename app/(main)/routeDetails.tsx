@@ -5,6 +5,7 @@ import { useLocalSearchParams } from 'expo-router';
 import MapView, { Polyline, Marker } from 'react-native-maps';
 import { getRouteById } from '@/services/routeRepository';
 import { RoutePoint } from '@/types/routes';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface RouteData {
   route: {
@@ -16,6 +17,7 @@ interface RouteData {
 }
 
 const RouteDetailsScreen = () => {
+  const { l } = useLanguage()
   const params = useLocalSearchParams();
   const [routeData, setRouteData] = useState<RouteData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,7 +59,7 @@ const RouteDetailsScreen = () => {
   if (!routeData) {
     return (
       <View style={styles.container}>
-        <Text>Маршрут не найден</Text>
+        <Text>{l.errorRouteNotFound}</Text>
       </View>
     );
   }

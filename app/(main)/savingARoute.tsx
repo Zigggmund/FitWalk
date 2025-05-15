@@ -15,12 +15,14 @@ import GreenButton from '@/components/ui/GreenButton';
 import PageHeader from '@/components/ui/PageHeader';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
-import { useLocation } from '@/hooks/LocationContext';
+import { useLocation } from '@/context/LocationContext';
 import { RoutePoint} from '@/types/routes';
 
 import { insertRoute, addRoutePoints } from '@/services/routeRepository';
+import { useLanguage } from '@/context/LanguageContext';
 
 const SavingARoute = () => {
+  const { l } = useLanguage();
   const router = useRouter();
   const params = useLocalSearchParams();
   const { locations, clearLocations } = useLocation();
@@ -33,16 +35,16 @@ const SavingARoute = () => {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert('Ошибка', 'Укажите название маршрута');
+      Alert.alert(l.error, l.validationName);
       return;
     }
     const numValue = parseInt(travelTime, 10);
     if (isNaN(numValue)) {
-      Alert.alert('Ошибка', 'Время должно быть числом');
+      Alert.alert(l.error, l.validationTimeIsNumber);
       return;
     }
     if (numValue <= 0) {
-      Alert.alert('Ошибка', 'Время должно быть больше 0');
+      Alert.alert(l.error, l.validationTimeIsPositive);
       return false;
     }
     console.log(numValue)
@@ -75,38 +77,40 @@ const SavingARoute = () => {
       await addRoutePoints(points);
 
       clearLocations();
-      Alert.alert('Успех', 'Маршрут сохранен');
+      Alert.alert(l.success, l.routeSaved);
       router.push('/');
     } catch (error) {
       console.error(error);
-      Alert.alert('Ошибка', 'Не удалось сохранить маршрут');
+      Alert.alert(l.error, l.errorSaveRoute);
     }
   };
 
   return (
     <ScrollView>
-      <PageHeader text={'Создание маршрута'} />
+      <View style={{marginTop: 20}}>
+        <PageHeader text={l.routeCreation} />
+      </View>
       <CompositeInput
-        label={'Название'}
+        label={l.name}
         isSmall={true}
         value={name}
         onChangeText={setName}
       />
       <CompositeInput
-        label={'Описание'}
+        label={l.description}
         isSmall={true}
         value={description}
         onChangeText={setDescription}
         multiline
       />
       <CompositeInput
-        label={'Время прохождения (минуты)'}
+        label={l.travelTimeMinutes}
         isSmall={true}
         value={travelTime}
         onChangeText={setTravelTime}
       />
       <CompositeInput
-        label={'Длина маршрута (метры)'}
+        label={l.routeLengthMeters}
         value={`${params.distance || 0}`}
         disable
         isSmall={true}
@@ -114,26 +118,26 @@ const SavingARoute = () => {
 
       <GreenButton onPress={() => routeId && router.push(`/route-details?routeId=${routeId}`)}>
         <View style={styles.buttonContainer}>
-          <SText style={styles.mapButtonText}>Посмотреть маршрут</SText>
+          <SText style={styles.mapButtonText}>{l.btnViewRoute}</SText>
           <Image style={styles.buttonImage} source={icons.map} />
         </View>
       </GreenButton>
 
       <View style={[styles.buttonContainer, { paddingRight: 30 }]}>
         <GreenButton onPress={handleSave}>
-          <SText style={styles.saveButtonText}>Сохранить</SText>
+          <SText style={styles.saveButtonText}>{l.btnSave}</SText>
         </GreenButton>
         <TouchableOpacity
           onPress={() =>
-            Alert.alert('Удаление маршрута', 'Весь прогресс будет потерян', [
+            Alert.alert(l.routeDeleting, l.progressLost, [
               {
-                text: 'Удалить',
+                text: l.btnDelete,
                 onPress: () => {
                   clearLocations();
                   router.push('/');
                 },
               },
-              { text: 'Отмена' },
+              { text: l.btnCancel },
             ])
           }
         >

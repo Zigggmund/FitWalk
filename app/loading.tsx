@@ -9,11 +9,12 @@ interface LoadingScreenProps {
 }
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onPress }) => {
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress} style={styles.wrapper}>
         <View style={styles.label}>
-          <SText style={styles.text}>Приветствуем!</SText>
+          <SText style={styles.text}>Welcome!</SText>
         </View>
       </TouchableOpacity>
       <Image source={images.welcome} style={styles.image} resizeMode="cover" />

@@ -3,6 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import SText from '@/components/ui/CustomFontText/SText';
 import { colors } from '@/constants/colors';
 import { icons } from '@/constants/icons';
+import { useLanguage } from '@/context/LanguageContext';
 
 type WeatherPanelProps = {
   temperature: number;
@@ -33,6 +34,7 @@ export const WeatherPanel = ({
   wind,
   weatherType,
 }: WeatherPanelProps) => {
+  const { l } = useLanguage();
   return (
     <View style={styles.mainContainer}>
       <View style={styles.windContainer}>
@@ -40,8 +42,8 @@ export const WeatherPanel = ({
           <Image source={icons.weatherWindy} style={styles.windIcon} />
         )}
         <View style={styles.windLineBreak}>
-          <SText style={styles.windText}>Ветер</SText>
-          <SText style={styles.windText}>{wind}м/с</SText>
+          <SText style={styles.windText}>{l.wind}</SText>
+          <SText style={styles.windText}>{wind}{l.meterPerSecond}</SText>
         </View>
       </View>
       <SText style={styles.temperature}>{temperature}°C</SText>

@@ -3,7 +3,7 @@ import * as SQLite from 'expo-sqlite';
 // Открываем базу данных асинхронно
 let db: SQLite.SQLiteDatabase;
 
-export const initDatabase = async () => {
+export const initDatabase = async (): Promise<void> => {
   try {
     db = await SQLite.openDatabaseAsync('routes.db');
     console.log('Database opened successfully');

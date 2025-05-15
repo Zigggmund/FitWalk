@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MapView, { Polyline, Marker } from 'react-native-maps';
 import { useRouter } from 'expo-router';
-import { useLocation } from '@/hooks/LocationContext';
+import { useLocation } from '@/context/LocationContext';
 import RouteTrackingPanel from '@/components/route/RouteTrackingPanel';
 import GreenButton from '@/components/ui/GreenButton';
 import calculateDistance from '@/utils/calculateDistance';
 import SText from '@/components/ui/CustomFontText/SText';
+import { useLanguage } from '@/context/LanguageContext';
 
 const CreatingARoute = () => {
+  const { l } = useLanguage()
   const router = useRouter();
   const { locations, startTracking, stopTracking } = useLocation();
   const [time, setTime] = useState(0);
@@ -94,7 +96,7 @@ const CreatingARoute = () => {
 
       <View style={styles.controls}>
         <GreenButton onPress={handleFinish}>
-          <SText style={styles.btnText}>Завершить маршрут</SText>
+          <SText style={styles.btnText}>{l.btnFinishRoute}</SText>
         </GreenButton>
         <RouteTrackingPanel time={time} distance={distance} />
       </View>

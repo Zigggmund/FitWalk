@@ -14,7 +14,7 @@ export const insertRoute = async (route: Route): Promise<number> => {
     const result = await db.runAsync(
       `INSERT INTO routes (title, description, travelTime, length)
          VALUES (?, ?, ?, ?)`,
-      route.title,
+      route.title || null,
       route.description || null, // Если undefined, сохраняем как NULL
       route.travelTime || null,
       route.length || null,
@@ -103,17 +103,16 @@ export const getRouteById = async (routeId: number) => {
   const db = getDatabase();
   const route = await db.getFirstAsync<Route>(
     'SELECT * FROM routes WHERE id = ?',
-    routeId
+    routeId,
   );
 
   const points = await db.getAllAsync<RoutePoint>(
     'SELECT * FROM route_points WHERE routeId = ? ORDER BY timestamp',
-    routeId
+    routeId,
   );
 
   return { route, points };
 };
-
 
 export const testDb = async () => {
   const db = getDatabase();
@@ -149,15 +148,15 @@ export const testDb = async () => {
       },
       {
         routeId: route1,
-        latitude: 55.752000,
-        longitude: 37.619000,
+        latitude: 55.752,
+        longitude: 37.619,
         pointType: 'path',
         timestamp: Date.now() / 1000 - 1800,
       },
       {
         routeId: route1,
-        latitude: 55.753000,
-        longitude: 37.620000,
+        latitude: 55.753,
+        longitude: 37.62,
         pointType: 'end',
         timestamp: Date.now() / 1000,
       },
@@ -174,29 +173,29 @@ export const testDb = async () => {
       },
       {
         routeId: route2,
-        latitude: 55.762000,
-        longitude: 37.629000,
+        latitude: 55.762,
+        longitude: 37.629,
         pointType: 'path',
         timestamp: Date.now() / 1000 - 3000,
       },
       {
         routeId: route2,
-        latitude: 55.763000,
-        longitude: 37.630000,
+        latitude: 55.763,
+        longitude: 37.63,
         pointType: 'path',
         timestamp: Date.now() / 1000 - 2000,
       },
       {
         routeId: route2,
-        latitude: 55.764000,
-        longitude: 37.631000,
+        latitude: 55.764,
+        longitude: 37.631,
         pointType: 'path',
         timestamp: Date.now() / 1000 - 1000,
       },
       {
         routeId: route2,
-        latitude: 55.765000,
-        longitude: 37.632000,
+        latitude: 55.765,
+        longitude: 37.632,
         pointType: 'end',
         timestamp: Date.now() / 1000,
       },
@@ -211,7 +210,7 @@ export const testDb = async () => {
 // Обновление данных маршрута
 export const updateRoute = async (
   id: number,
-  route: Partial<Route>
+  route: Partial<Route>,
 ): Promise<Route> => {
   const db = getDatabase();
 
@@ -224,17 +223,17 @@ export const updateRoute = async (
            travelTime = ?, 
            length = ?
        WHERE id = ?`,
-      route.title,
+      route.title || null,
       route.description || null,
       route.travelTime || null,
       route.length || null,
-      id
+      id,
     );
 
     // Получаем обновленный маршрут из базы данных
     const updatedRoute = await db.getFirstAsync<Route>(
       'SELECT * FROM routes WHERE id = ?',
-      id
+      id,
     );
 
     if (!updatedRoute) {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Modal, StyleSheet, View } from 'react-native';
 
 import { colors } from '@/constants/colors';
+import { useLanguage } from '@/context/LanguageContext';
 
 type CustomModalProps = {
   visible: boolean;
@@ -16,6 +17,8 @@ const CustomModal = ({
   onSave,
   children,
 }: CustomModalProps) => {
+  const { l } = useLanguage()
+
   return (
     <Modal
       visible={visible}
@@ -28,12 +31,12 @@ const CustomModal = ({
           {children}
           <View style={styles.buttonsContainer}>
             <Button
-              title="Сохранить"
+              title={l.btnSave}
               onPress={onSave}
               color={colors.modal.accept}
             />
             <Button
-              title="Отмена"
+              title={l.btnCancel}
               onPress={onClose}
               color={colors.modal.cancel}
             />

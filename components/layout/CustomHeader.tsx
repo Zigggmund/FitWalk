@@ -2,25 +2,35 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
 
-import { icons } from '@/constants/icons'; // твои иконки
-
-// Массив иконок для хедера
-const headerTabs = [
-  { name: 'creatingARoute', icon: icons.startRoute, height: 50 },
-  { name: 'settings', icon: icons.settings, height: 40 },
-] as const;
+import { icons } from '@/constants/icons';
+import { useLanguage } from '@/context/LanguageContext'; // твои иконки
 
 export default function CustomHeader() {
   const router = useRouter();
-  const segments = useSegments(); // ['(main)', '(headerTabs)', 'map'] и т.п.
+  const segments = useSegments();
+  const { language } = useLanguage();
+
+  const headerTabs = [
+    { name: 'creatingARoute', height: 50 },
+    { name: 'settings', height: 40 },
+  ] as const;
 
   return (
     <View style={styles.container}>
-      {headerTabs.map((tab, index) => {
+      {headerTabs.map(tab => {
         const focused = segments[1] === tab.name;
+
+        // Выбор иконки прямо внутри JSX — важно
+        const iconSource =
+          tab.name === 'creatingARoute'
+            ? language === 'ru'
+              ? icons.startRoute_ru
+              : icons.startRoute_en
+            : icons.settings;
+
         return (
           <TouchableOpacity
-            key={index}
+            key={`${language}-${tab.name}`} // важно, чтобы заставить React пересоздать
             onPress={() => {
               if (!focused) {
                 router.push(`/(main)/${tab.name}`);
@@ -28,7 +38,8 @@ export default function CustomHeader() {
             }}
           >
             <Image
-              source={tab.icon}
+              key={`img-${language}-${tab.name}`} // меняем key у самого Image
+              source={iconSource}
               style={{
                 height: tab.height,
                 tintColor: focused ? '#000' : '#fff',

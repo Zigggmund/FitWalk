@@ -3,15 +3,20 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
+import * as Location from 'expo-location';
 import * as NavigationBar from 'expo-navigation-bar';
 import { Slot, SplashScreen } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
+import { LanguageProvider } from '@/context/LanguageContext';
+import { LocationProvider } from '@/context/LocationContext';
+
 import LoadingScreen from './loading';
 
+import { LocationGate } from '@/app/locationGate';
 import SensationFont from '@/assets/fonts/Sansation-Regular.ttf';
 import { checkDatabase, initDatabase } from '@/services/db';
-import { testDb} from '@/services/routeRepository';
+import { getSetting, setSetting } from '@/services/settingsRepository';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,11 +37,27 @@ const RootLayout = () => {
         // Инициализация БД
         console.log('Инициализация базы данных...');
         await initDatabase();
-        // УДАЛИТЬ, для тестов
-        // await testDb();
-
         await checkDatabase();
         setDbInitialized(true);
+        // проверка данных
+        // console.log('МАРШРУТЫ', await getAllRoutes());
+        // console.log('ЯЗЫК', await getSetting('language'));
+
+        // 💡 Проверка разрешения на геолокацию
+        const permissionRequested = await getSetting<boolean>(
+          'location_permission_requested',
+        );
+        if (!permissionRequested) {
+          console.log('Запрос разрешения на геолокацию...');
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          await setSetting('location_permission_requested', 'true');
+
+          if (status !== 'granted') {
+            console.warn('Разрешение на геолокацию не получено');
+          } else {
+            console.log('Геолокация разрешена');
+          }
+        }
 
         await SplashScreen.hideAsync();
       } catch (error) {
@@ -53,16 +74,23 @@ const RootLayout = () => {
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded || !isAppReady || !dbInitialized) {
+  if (!fontsLoaded || !dbInitialized || !isAppReady) {
+    // Здесь уже есть язык → можно показывать LoadingScreen
     return <LoadingScreen onPress={() => setIsAppReady(true)} />;
   }
 
   return (
     <SafeAreaProvider>
-      <View style={{ flex: 1 }}>
-        <StatusBar backgroundColor="#67BCB2" />
-        <Slot />
-      </View>
+      <LanguageProvider>
+        <LocationProvider>
+          <LocationGate>
+            <View style={{ flex: 1 }}>
+              <StatusBar backgroundColor="#67BCB2" />
+              <Slot />
+            </View>
+          </LocationGate>
+        </LocationProvider>
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 };

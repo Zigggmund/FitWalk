@@ -4,7 +4,8 @@ import home from '@/assets/icons/home.png';
 import logo from '@/assets/icons/logo.png';
 import map from '@/assets/icons/map.png';
 import settings from '@/assets/icons/settings.png';
-import startRoute from '@/assets/icons/startRoute.png';
+import startRoute_en from '@/assets/icons/startRoute_en.png';
+import startRoute_ru from '@/assets/icons/startRoute_ru.png';
 import weather from '@/assets/icons/temperature.png';
 import weatherCloudy from '@/assets/icons/weather/cloud.png';
 import weatherRainy from '@/assets/icons/weather/rain.png';
@@ -21,7 +22,8 @@ export const icons = {
   settings,
   editIcon,
   deleteIcon,
-  startRoute,
+  startRoute_ru,
+  startRoute_en,
 
   weatherSunny,
   weatherCloudy,

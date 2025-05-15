@@ -1,37 +1,24 @@
-import { useState, useEffect } from 'react';
 import { Alert, TouchableOpacity, View } from 'react-native';
+
 import CompositeInput from '@/components/ui/CompositeInput';
 import PageHeader from '@/components/ui/PageHeader';
-import { getSetting, setSetting } from '@/services/settingsRepository';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function SettingsScreen() {
-  const [language, setLanguage] = useState<string>('en'); // Default value
-
-  // Load the language setting when component mounts
-  useEffect(() => {
-    const loadLanguage = async () => {
-      const savedLanguage = await getSetting('language');
-      if (savedLanguage) {
-        setLanguage(savedLanguage === 'ru' ? 'Русский' : 'English');
-      }
-    };
-    loadLanguage();
-  }, []);
+  const { l, language, setLanguage } = useLanguage();
 
   const handleLanguageSelect = () => {
-    Alert.alert('Выберите язык', '', [
+    Alert.alert(l.selectLanguage, '', [
       {
-        text: 'Русский',
+        text: 'Russian',
         onPress: async () => {
-          setLanguage('Русский');
-          await setSetting('language', 'ru');
+          setLanguage('ru');
         },
       },
       {
         text: 'English',
         onPress: async () => {
-          setLanguage('English');
-          await setSetting('language', 'en');
+          setLanguage('en');
         },
       },
     ]);
@@ -39,14 +26,10 @@ export default function SettingsScreen() {
 
   return (
     <View>
-      <PageHeader text={'Настройки'} />
+      <PageHeader text={l.settings} />
       <TouchableOpacity onPress={handleLanguageSelect}>
         <View style={{ paddingTop: 40 }}>
-          <CompositeInput
-            label={'Язык'}
-            value={language}
-            disable
-          />
+          <CompositeInput label={l.language} value={language} disable />
         </View>
       </TouchableOpacity>
     </View>

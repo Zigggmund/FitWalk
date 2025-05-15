@@ -3,6 +3,7 @@ import { Alert, StyleSheet, TextInput } from 'react-native';
 
 import SText from '@/components/ui/CustomFontText/SText';
 import CustomModal from '@/components/ui/parts/CustomModal';
+import { useLanguage } from '@/context/LanguageContext';
 
 type Props = {
   visible: boolean;
@@ -14,30 +15,31 @@ type Props = {
 };
 
 const EditRouteModal = ({
-                          visible,
-                          onClose,
-                          onSave,
-                          initialTitle = '',
-                          initialDescription = '',
-                          initialTravelTime = '',
-                        }: Props) => {
+  visible,
+  onClose,
+  onSave,
+  initialTitle = '',
+  initialDescription = '',
+  initialTravelTime = '',
+}: Props) => {
+  const { l } = useLanguage();
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
   const [travelTime, setTravelTime] = useState(initialTravelTime);
 
   const handleSave = () => {
     if (!title.trim()) {
-      Alert.alert('Ошибка', 'Введите название маршрута');
+      Alert.alert(l.error, l.validationName);
       return;
     }
 
     if (!travelTime.trim()) {
-      Alert.alert('Ошибка', 'Введите время прохождения маршрута');
+      Alert.alert(l.error, l.validationTimeInMinutesRequired);
       return;
     }
 
     if (!/^\d+$/.test(travelTime)) {
-      Alert.alert('Ошибка', 'Время прохождения должно быть числом (в минутах)');
+      Alert.alert(l.error, l.validationTimeInMinutes);
       return;
     }
 
@@ -52,29 +54,29 @@ const EditRouteModal = ({
 
   return (
     <CustomModal visible={visible} onClose={onClose} onSave={handleSave}>
-      <SText style={styles.modalTitle}>Название маршрута</SText>
+      <SText style={styles.modalTitle}>{l.routeName}</SText>
       <TextInput
         style={styles.input}
         value={title}
         onChangeText={setTitle}
-        placeholder="Введите название"
+        placeholder={l.inputName}
       />
 
-      <SText style={styles.modalTitle}>Описание маршрута</SText>
+      <SText style={styles.modalTitle}>{l.routeDescription}</SText>
       <TextInput
         style={[styles.input, styles.multilineInput]}
         value={description}
         onChangeText={setDescription}
-        placeholder="Введите описание (необязательно)"
+        placeholder={l.inputDescription}
         multiline
       />
 
-      <SText style={styles.modalTitle}>Время прохождения (минуты)</SText>
+      <SText style={styles.modalTitle}>{l.travelTimeMinutes}</SText>
       <TextInput
         style={styles.input}
         value={travelTime}
         onChangeText={setTravelTime}
-        placeholder="Введите время в минутах"
+        placeholder={l.inputTimeInMinutes}
         keyboardType="numeric"
       />
     </CustomModal>

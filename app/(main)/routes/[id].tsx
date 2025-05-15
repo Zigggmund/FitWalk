@@ -19,8 +19,10 @@ import { icons } from '@/constants/icons';
 import { getRouteById, updateRoute, deleteRoute } from '@/services/routeRepository';
 import { Route, RoutePoint } from '@/types/routes';
 import EditRouteModal from '@/components/route/EditRouteModal';
+import { useLanguage } from '@/context/LanguageContext';
 
 const RouteDetails = () => {
+  const { l } = useLanguage();
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const [route, setRoute] = useState<Route | null>(null);
@@ -60,28 +62,28 @@ const RouteDetails = () => {
       setEditModalVisible(false);
       // Обновляем данные после сохранения
       await loadRouteData();
-      Alert.alert('Успех', 'Маршрут обновлен');
+      Alert.alert(l.success, l.routeUpdated);
     } catch (error) {
       console.error(error);
-      Alert.alert('Ошибка', 'Не удалось обновить маршрут');
+      Alert.alert(l.error, l.errorUpdatingRoute);
     }
   };
 
   const handleDelete = async () => {
     Alert.alert(
-      'Удаление маршрута',
-      'Вы уверены, что хотите удалить маршрут?',
+      l.routeDeleting,
+      l.confirmDeleting,
       [
-        { text: 'Отмена', style: 'cancel' },
+        { text: l.btnCancel, style: 'cancel' },
         {
-          text: 'Удалить',
+          text: l.btnDelete,
           onPress: async () => {
             try {
               await deleteRoute(Number(id));
               router.push('/');
             } catch (error) {
               console.error(error);
-              Alert.alert('Ошибка', 'Не удалось удалить маршрут');
+              Alert.alert(l.error, l.errorDeletingRoute);
             }
           },
           style: 'destructive',
@@ -94,7 +96,7 @@ const RouteDetails = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <SText>Загрузка...</SText>
+        <SText>{l.loading}...</SText>
       </View>
     );
   }
@@ -102,7 +104,7 @@ const RouteDetails = () => {
   if (!route) {
     return (
       <View style={styles.container}>
-        <SText>Маршрут не найден</SText>
+        <SText>{l.errorRouteNotFound}</SText>
       </View>
     );
   }
@@ -116,16 +118,16 @@ const RouteDetails = () => {
         />
 
         <BorderedBlockInput
-          label="Описание"
-          text={route.description || 'Нет описания'}
+          label={l.description}
+          text={route.description || l.noDescription}
         />
         <BorderedBlockInput
-          label="Время прохождения"
+          label={l.travelTime}
           text={formatTime(route.travelTime ?? 0)}
         />
         <BorderedBlockInput
-          label="Длина маршрута"
-          text={`${route.length} метров`}
+          label={l.routeLength}
+          text={`${route.length} ${l.inMeters}`}
         />
 
         <GreenButton
@@ -133,7 +135,7 @@ const RouteDetails = () => {
           style={styles.mapButton}
         >
           <View style={styles.buttonContainer}>
-            <SText style={styles.mapButtonText}>Посмотреть на карте</SText>
+            <SText style={styles.mapButtonText}>{l.btnViewOnMap}</SText>
             <Image style={styles.buttonImage} source={icons.map} />
           </View>
         </GreenButton>

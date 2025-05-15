@@ -1,13 +1,24 @@
+import { Route } from '@/types/routes';
+
 import React, { useEffect, useState } from 'react';
-import { FlatList, View, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
 import RouteItem from '@/components/route/RouteItem';
+import SText from '@/components/ui/CustomFontText/SText';
 import PageHeader from '@/components/ui/PageHeader';
 import Line from '@/components/ui/parts/Line';
+import { useLanguage } from '@/context/LanguageContext';
+
 import { getAllRoutes } from '@/services/routeRepository';
-import { Route } from '@/types/routes';
-import SText from '@/components/ui/CustomFontText/SText';
 
 export default function Index() {
+  const { l } = useLanguage();
   const [routes, setRoutes] = useState<Route[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +29,7 @@ export default function Index() {
         const data = await getAllRoutes();
         setRoutes(data);
       } catch (err) {
-        setError('Не удалось загрузить маршруты');
+        setError(l.errorLoadingRoutes);
         console.error(err);
       } finally {
         setLoading(false);
@@ -30,7 +41,7 @@ export default function Index() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.defaultContainer}>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -38,7 +49,7 @@ export default function Index() {
 
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.defaultContainer}>
         <Text style={{ color: 'red' }}>{error}</Text>
       </View>
     );
@@ -46,7 +57,7 @@ export default function Index() {
 
   return (
     <View style={{ flex: 1 }}>
-      <PageHeader text={'Ваши маршруты:'} />
+      <PageHeader text={l.yourRoutes + ':'} />
       <FlatList
         data={routes}
         keyExtractor={item => item.id?.toString() ?? Math.random().toString()}
@@ -54,9 +65,7 @@ export default function Index() {
         ItemSeparatorComponent={Line}
         contentContainerStyle={{ paddingBottom: 20 }}
         ListEmptyComponent={
-          <SText style={styles.defaultText}>
-            Нет сохраненных маршрутов
-          </SText>
+          <SText style={styles.defaultText}>{l.noRoutes}</SText>
         }
       />
     </View>
@@ -68,5 +77,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 30,
     fontSize: 34,
+  },
+  defaultContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
