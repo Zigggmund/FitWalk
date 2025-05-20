@@ -116,7 +116,7 @@ const SavingARoute = () => {
         isSmall={true}
       />
 
-      <GreenButton onPress={() => routeId && router.push(`/route-details?routeId=${routeId}`)}>
+      <GreenButton onPress={() => routeId && router.push(`/routes/map/${routeId}`)}>
         <View style={styles.buttonContainer}>
           <SText style={styles.mapButtonText}>{l.btnViewRoute}</SText>
           <Image style={styles.buttonImage} source={icons.map} />

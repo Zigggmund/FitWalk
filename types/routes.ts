@@ -4,7 +4,7 @@ export interface Route {
   description?: string;
   travelTime?: number;
   length?: number;
-};
+}
 
 export interface RoutePoint {
   routeId: number;
@@ -12,10 +12,9 @@ export interface RoutePoint {
   longitude: number;
   pointType: 'start' | 'end' | 'path';
   timestamp?: number;
-};
+}
 
 export interface RouteWithPoints {
-  id: number;
-  title: string;
+  route: Route;
   points: RoutePoint[];
 }

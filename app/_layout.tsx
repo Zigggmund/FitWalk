@@ -17,6 +17,7 @@ import { LocationGate } from '@/app/locationGate';
 import SensationFont from '@/assets/fonts/Sansation-Regular.ttf';
 import { checkDatabase, initDatabase } from '@/services/db';
 import { getSetting, setSetting } from '@/services/settingsRepository';
+import { testDb } from '@/services/routeRepository';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,6 +40,7 @@ const RootLayout = () => {
         await initDatabase();
         await checkDatabase();
         setDbInitialized(true);
+        await testDb();
         // проверка данных
         // console.log('МАРШРУТЫ', await getAllRoutes());
         // console.log('ЯЗЫК', await getSetting('language'));
@@ -47,6 +49,8 @@ const RootLayout = () => {
         const permissionRequested = await getSetting<boolean>(
           'location_permission_requested',
         );
+
+        console.log('PermissionGeo: ', permissionRequested);
         if (!permissionRequested) {
           console.log('Запрос разрешения на геолокацию...');
           const { status } = await Location.requestForegroundPermissionsAsync();

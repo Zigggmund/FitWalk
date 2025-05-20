@@ -33,10 +33,14 @@ export const LocationProvider = ({
     null,
   );
   const [permissionGranted, setPermissionGranted] = useState<boolean>(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { l } = useLanguage();
 
   const requestPermission = async () => {
+    setLoading(true);
+    setLocationError(null);
+
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -44,11 +48,13 @@ export const LocationProvider = ({
         return;
       }
 
+      setPermissionGranted(true);
+
       const loc = await Location.getCurrentPositionAsync({});
       setLocation(loc);
-      setPermissionGranted(true);
     } catch (e) {
       console.error(`${l.errorGetLocation}:`, e);
+      setLocationError(l.errorUnableToGetLocation);
     } finally {
       setLoading(false);
     }
@@ -70,6 +76,17 @@ export const LocationProvider = ({
     return (
       <View style={styles.centered}>
         <Text style={styles.text}>{l.errorGeoPermissionNeeded}</Text>
+        <Button title={l.btnTryAgain} onPress={requestPermission} />
+      </View>
+    );
+  }
+
+  if (permissionGranted && !location) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.text}>
+          {locationError ?? l.errorUnableToWorkWithoutGeo}
+        </Text>
         <Button title={l.btnTryAgain} onPress={requestPermission} />
       </View>
     );

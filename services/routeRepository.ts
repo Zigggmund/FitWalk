@@ -19,6 +19,8 @@ export const insertRoute = async (route: Route): Promise<number> => {
       route.travelTime || null,
       route.length || null,
     );
+
+
     return result.lastInsertRowId; // Возвращаем ID нового маршрута
   } catch (error) {
     console.error('Ошибка при добавлении маршрута:', error);
@@ -57,22 +59,6 @@ export const addRoutePoints = async (points: RoutePoint[]): Promise<void> => {
     await db.execAsync('ROLLBACK');
     throw error;
   }
-};
-
-// Получение маршрута с точками
-export const getRouteWithPoints = async (
-  routeId: number,
-): Promise<{ route: Route | null; points: RoutePoint[] }> => {
-  const db = getDatabase();
-  const route = await db.getFirstAsync<Route>(
-    'SELECT * FROM routes WHERE id = ?',
-    routeId,
-  );
-  const points = await db.getAllAsync<RoutePoint>(
-    'SELECT * FROM route_points WHERE routeId = ? ORDER BY timestamp',
-    routeId,
-  );
-  return { route, points };
 };
 
 // Получение всех маршрутов с точками
@@ -117,6 +103,7 @@ export const getRouteById = async (routeId: number) => {
 export const testDb = async () => {
   const db = getDatabase();
 
+
   try {
     // Очищаем таблицы
     await db.execAsync('DELETE FROM route_points');
@@ -135,6 +122,13 @@ export const testDb = async () => {
       description: 'Второй тестовый маршрут с большим количеством точек',
       travelTime: 45,
       length: 2500,
+    });
+
+    const route3 = await insertRoute({
+      title: 'Дивногорск → Красноярск',
+      description: 'От железнодорожного вокзала Дивногорска до Предмостной площади Красноярска',
+      travelTime: 10,
+      length: 29000, // примерно 29 км
     });
 
     // Добавляем точки для первого маршрута (3 точки)
@@ -196,6 +190,23 @@ export const testDb = async () => {
         routeId: route2,
         latitude: 55.765,
         longitude: 37.632,
+        pointType: 'end',
+        timestamp: Date.now() / 1000,
+      },
+    ]);
+
+    await addRoutePoints([
+      {
+        routeId: route3,
+        latitude: 55.950278, // Дивногорск, ж/д вокзал
+        longitude: 92.303056,
+        pointType: 'start',
+        timestamp: Date.now() / 1000 - 600,
+      },
+      {
+        routeId: route3,
+        latitude: 56.008889, // Красноярск, Предмостная площадь
+        longitude: 92.870556,
         pointType: 'end',
         timestamp: Date.now() / 1000,
       },

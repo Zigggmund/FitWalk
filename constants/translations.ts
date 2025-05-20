@@ -42,7 +42,7 @@ export const translations = {
     meterPerSecond: 'м/с',
     loading: 'Загрузка',
     dateMask: 'ДД.ММ.ГГГГ',
-    timeMask: 'ЧЧ:ММ',
+    timeMask: 'ЧЧ ММ',
 
     // Кнопки
     btnCancel: 'Отмена',
@@ -53,11 +53,13 @@ export const translations = {
     btnFinishRoute: 'Завершить маршрут',
     btnSetStartTime: 'Задать стартовое время',
     btnTryAgain: 'Повторить попытку',
+    btnFlipRoute: 'Сменить направление',
 
     // Ошибки
     error: 'Ошибка',
     errorSaveRoute: 'Не удалось сохранить маршрут',
     errorRouteNotFound: 'Маршрут не найден',
+    errorRoutesNotFound: 'Маршруты не найдены',
     noRoutes: 'Нет сохраненных маршрутов',
     errorDeletingRoute: 'Не удалось удалить маршрут',
     errorUpdatingRoute: 'Не удалось обновить маршрут',
@@ -65,6 +67,11 @@ export const translations = {
     errorGetLocation: 'Ошибка при запросе геолокации',
     errorGeoPermissionNeeded: 'Приложению необходимо разрешение на геолокацию. Пожалуйста, предоставьте его.',
     errorUnableToWorkWithoutGeo: 'Приложению нужно разрешение на геолокацию для работы.',
+    errorStartEndPointsNotFound: 'Стартовая или конечная точка не найдена.',
+    errorFetchingWeather: 'Ошибка загрузки погоды.',
+    errorDateTooLate: 'Прогноз доступен лишь на 7 дней',
+    errorAPI: 'Ошибка получения данных api',
+    errorUnableToGetLocation: 'Не удалось определить текущее местоположение. Убедитесь, что службы геолокации включены.',
 
     // Валидация
     validationTimeIsNumber: 'Время должно быть числом',
@@ -74,7 +81,7 @@ export const translations = {
     validationTimeInMinutesRequired: 'Введите время прохождения маршрута',
     validationStartTimeFormat: 'Введите время в формате ЧЧ ММ через пробел',
     validationStartTimeNumbers: 'Время некорректно',
-    validationStartDateFormat: 'Введите дату в формате ДД ММ ГГГГ через пробел',
+    validationStartDateFormat: 'Введите дату в формате ДД.ММ.ГГГГ',
     validationStartDateNumbers: 'Дата некорректна',
     validationStartTimeElapsed: 'Нельзя указать прошедшее время',
   },
@@ -121,8 +128,8 @@ export const translations = {
     success: 'Success',
     meterPerSecond: 'm/s',
     loading: 'Loading',
-    dateMask: 'DD:MM:YYYY',
-    timeMask: 'HH:mm',
+    dateMask: 'DD.MM.YYYY',
+    timeMask: 'HH mm',
 
     // Buttons
     btnCancel: 'Cancel',
@@ -133,11 +140,13 @@ export const translations = {
     btnFinishRoute: 'Finish the route',
     btnSetStartTime: 'Set the starting time',
     btnTryAgain: 'Try again',
+    btnFlipRoute: 'Flip the route',
 
     // Errors
     error: 'Error',
     errorSaveRoute: 'Saving a route failed',
     errorRouteNotFound: 'Route not found',
+    errorRoutesNotFound: 'Routes not found',
     noRoutes: 'No routes found',
     errorDeletingRoute: 'Deleting a route failed',
     errorUpdatingRoute: 'Updating a route failed',
@@ -145,6 +154,11 @@ export const translations = {
     errorGetLocation: 'Error when requesting geolocation',
     errorGeoPermissionNeeded: 'The application needs geolocation permission. Please provide it.',
     errorUnableToWorkWithoutGeo: 'The application needs geolocation permission to work.',
+    errorStartEndPointsNotFound: 'No starting or ending point found.',
+    errorFetchingWeather: 'Error fetching weather.',
+    errorDateTooLate: 'The forecast is only available for 7 days',
+    errorAPI: 'Error receiving api data.',
+    errorUnableToGetLocation: 'Unable to determine current location. Make sure location services are enabled.',
 
     // Валидация
     validationTimeIsNumber: 'Travel time must be a number',
@@ -156,7 +170,7 @@ export const translations = {
       'Enter the time in the HH MM format separated by a space',
     validationStartTimeNumbers: 'Incorrect time',
     validationStartDateFormat:
-      'Enter the date in the DD MM YYYY format separated by a space',
+      'Enter the date in the DD.MM.YYYY format',
     validationStartDateNumbers: 'Incorrect date',
     validationStartTimeElapsed: 'It is impossible to specify the elapsed time',
   },

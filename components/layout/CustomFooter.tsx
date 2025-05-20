@@ -1,5 +1,5 @@
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useRouter, useSegments } from 'expo-router';
+import { useRouter, usePathname } from 'expo-router';
 
 import { icons } from '@/constants/icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,8 +12,8 @@ const tabs = [
 
 export default function CustomFooter() {
   const router = useRouter();
-  const segments = useSegments(); // ['(main)', '(tabs)', 'map'] и т.п.
-  const insets = useSafeAreaInsets()
+  const pathname = usePathname();
+  const insets = useSafeAreaInsets();
 
   return (
     <View style={[
@@ -24,8 +24,7 @@ export default function CustomFooter() {
       }
     ]}>
       {tabs.map((tab, index) => {
-        const isInTabs = segments[1] === '(tabs)';
-        const currentTab = isInTabs ? (segments[2] ?? '') : null;
+        const currentTab = pathname.split('/').pop() || '';
         const focused = currentTab === tab.name;
 
         return (

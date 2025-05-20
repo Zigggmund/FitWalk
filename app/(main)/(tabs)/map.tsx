@@ -1,103 +1,107 @@
-// src/app/map.tsx
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-import MapView, { Polyline, Marker } from 'react-native-maps';
-import { getRouteById, getAllRoutesWithPoints } from '@/services/routeRepository';
-import { RoutePoint, RouteWithPoints } from '@/types/routes';
+import { Route, RouteWithPoints } from '@/types/routes';
 
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+
+import SingleRouteMap from '@/components/route/SingleRouteMap';
+import SText from '@/components/ui/CustomFontText/SText';
+import { colors } from '@/constants/colors';
+import { useLanguage } from '@/context/LanguageContext';
+
+import { getAllRoutesWithPoints } from '@/services/routeRepository';
 
 const MapScreen = () => {
-  const params = useLocalSearchParams();
+  const [currentRoute, setCurrentRoute] = useState<Route | null>(null);
+  const { l } = useLanguage();
   const [routes, setRoutes] = useState<RouteWithPoints[]>([]);
-  const [selectedRoute, setSelectedRoute] = useState<RouteWithPoints | null>(null);
-  const [region, setRegion] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadRoutes = async () => {
       try {
-        if (params.routeId) {
-          const route = await getRouteById(Number(params.routeId));
-          setSelectedRoute(route);
-          setRegion(calculateRegion(route.points));
-        } else {
-          const allRoutes = await getAllRoutesWithPoints();
-          setRoutes(allRoutes);
-          setRegion(calculateRegion(allRoutes.flatMap(r => r.points)));
-        }
+        const allRoutes = await getAllRoutesWithPoints();
+        setRoutes(allRoutes);
       } catch (error) {
         console.error('Error loading routes:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadRoutes();
-  }, [params.routeId]);
+  }, []);
 
-  const renderMarker = (point: RoutePoint, label: string, color: string, title: string) => (
-    <Marker
-      coordinate={{
-        latitude: point.latitude,
-        longitude: point.longitude,
-      }}
-      anchor={{ x: 0.5, y: 0.5 }}
-      tracksViewChanges={false} // Улучшает производительность
-      title={title}
-    >
-      <View style={[styles.markerContainer, { borderColor: color }]}>
-        <View style={[styles.marker, { backgroundColor: color }]}>
-          <Text style={styles.markerText}>{label}</Text>
-        </View>
+  // отображение текущей позиции
+  const [currentLocation, setCurrentLocation] =
+    useState<Location.LocationObject | null>(null);
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.warn('Permission to access location was denied');
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation(location);
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" />
       </View>
-    </Marker>
-  );
-
-  if (!region) {
-    return <View style={styles.container}><Text>Loading...</Text></View>;
+    );
   }
 
-  const displayRoutes = selectedRoute ? [selectedRoute] : routes;
+  if (!routes) {
+    return (
+      <View style={styles.container}>
+        <SText>{l.errorRoutesNotFound}</SText>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        initialRegion={region}
-        region={region}
-        onRegionChangeComplete={setRegion}
-      >
-        {displayRoutes.map((route, index) => {
+      <MapView style={styles.container}>
+        {routes.map((route, index) => {
           const color = getColorForIndex(index);
-          const startPoint = route.points.find(p => p.pointType === 'start');
-          const endPoint = route.points.find(p => p.pointType === 'end');
-
           return (
-            <React.Fragment key={route.id}>
-              <Polyline
-                coordinates={route.points.map(p => ({
-                  latitude: p.latitude,
-                  longitude: p.longitude,
-                }))}
-                strokeColor={color}
-                strokeWidth={4}
-              />
-
-              {startPoint && renderMarker(
-                startPoint,
-                'S',
-                color,
-                `Start: ${route.title}`
-              )}
-
-              {endPoint && renderMarker(
-                endPoint,
-                'F',
-                color,
-                `End: ${route.title}`
-              )}
-            </React.Fragment>
+            <SingleRouteMap
+              key={route.route.id ?? `route-${index}`}
+              points={route.points}
+              color={color}
+              onPress={() => setCurrentRoute(route.route)}
+            />
           );
         })}
+
+        {/* Текущая позиция */}
+        {currentLocation && (
+          <Marker
+            coordinate={{
+              latitude: currentLocation.coords.latitude,
+              longitude: currentLocation.coords.longitude,
+            }}
+            pinColor="blue"
+            title="You are here"
+          />
+        )}
       </MapView>
+
+      {/* Title */}
+      {currentRoute && (
+        <View style={styles.infoPanel}>
+          <Text style={styles.title}>{currentRoute.title}</Text>
+          {currentRoute.description && (
+            <Text style={styles.description}>{currentRoute.description}</Text>
+          )}
+        </View>
+      )}
     </View>
   );
 };
@@ -105,57 +109,227 @@ const MapScreen = () => {
 // Генерация разных цветов для маршрутов
 const getColorForIndex = (index: number) => {
   const colors = [
-    '#FF0000', '#00FF00', '#0000FF', '#FF00FF',
-    '#00FFFF', '#FFA500', '#800080', '#008000',
-    '#FF6347', '#4682B4', '#D2691E', '#9932CC'
+    'tomato',
+    'orange',
+    'yellow',
+    'green',
+    'gold',
+    'wheat',
+    'linen',
+    'tan',
+    'aqua',
+    'teal',
+    'violet',
+    'purple',
+    'indigo',
+    'turquoise',
+    'navy',
+    'plum',
   ];
   return colors[index % colors.length];
-};
-
-// Расчет региона для отображения всех точек
-const calculateRegion = (points: RoutePoint[]) => {
-  if (!points || points.length === 0) return null;
-
-  let minLat = points[0].latitude;
-  let maxLat = points[0].latitude;
-  let minLng = points[0].longitude;
-  let maxLng = points[0].longitude;
-
-  points.forEach(point => {
-    minLat = Math.min(minLat, point.latitude);
-    maxLat = Math.max(maxLat, point.latitude);
-    minLng = Math.min(minLng, point.longitude);
-    maxLng = Math.max(maxLng, point.longitude);
-  });
-
-  const padding = 0.01; // Небольшой отступ
-
-  return {
-    latitude: (minLat + maxLat) / 2,
-    longitude: (minLng + maxLng) / 2,
-    latitudeDelta: Math.abs(maxLat - minLat) + padding,
-    longitudeDelta: Math.abs(maxLng - minLng) + padding,
-  };
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  map: {
+  loadingContainer: {
     flex: 1,
-  },
-  marker: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  markerText: {
-    color: 'white',
+  infoPanel: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    padding: 15,
+    borderRadius: 10,
+    elevation: 3,
+    backgroundColor: 'white',
+    borderColor: colors.green.textBlock,
+    borderWidth: 5,
+  },
+  title: {
+    fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  description: {
+    fontSize: 14,
+    color: '#666',
   },
 });
 
 export default MapScreen;
+
+// import { Route, RouteWithPoints } from '@/types/routes';
+//
+// import React, { useEffect, useState } from 'react';
+// import {
+//   ActivityIndicator,
+//   StyleSheet,
+//   Text,
+//   TouchableOpacity,
+//   View,
+// } from 'react-native';
+// import MapView, { Marker } from 'react-native-maps';
+// import * as Location from 'expo-location';
+//
+// import SingleRouteMap from '@/components/route/SingleRouteMap';
+// import SText from '@/components/ui/CustomFontText/SText';
+// import { colors } from '@/constants/colors';
+// import { useLanguage } from '@/context/LanguageContext';
+//
+// import { getAllRoutesWithPoints } from '@/services/routeRepository';
+//
+// const MapScreen = () => {
+//   const [currentRoute, setCurrentRoute] = useState<Route | null>(null);
+//   const { l } = useLanguage();
+//   const [routes, setRoutes] = useState<RouteWithPoints[]>([]);
+//   const [loading, setLoading] = useState(true);
+//
+//   useEffect(() => {
+//     const loadRoutes = async () => {
+//       try {
+//         const allRoutes = await getAllRoutesWithPoints();
+//         setRoutes(allRoutes);
+//       } catch (error) {
+//         console.error('Error loading routes:', error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//
+//     loadRoutes();
+//   }, []);
+//
+//   // отображение текущей позиции
+//   const [currentLocation, setCurrentLocation] =
+//     useState<Location.LocationObject | null>(null);
+//   useEffect(() => {
+//     (async () => {
+//       const { status } = await Location.requestForegroundPermissionsAsync();
+//       if (status !== 'granted') {
+//         console.warn('Permission to access location was denied');
+//         return;
+//       }
+//
+//       const location = await Location.getCurrentPositionAsync({});
+//       setCurrentLocation(location);
+//     })();
+//   }, []);
+//
+//   if (loading) {
+//     return (
+//       <View style={styles.loadingContainer}>
+//         <ActivityIndicator size="large" />
+//       </View>
+//     );
+//   }
+//
+//   if (!routes) {
+//     return (
+//       <View style={styles.container}>
+//         <SText>{l.errorRoutesNotFound}</SText>
+//       </View>
+//     );
+//   }
+//
+//   return (
+//     <View style={styles.container}>
+//       <MapView style={styles.container}>
+//         {routes.map((route, index) => {
+//           const color = getColorForIndex(index);
+//           return (
+//             <TouchableOpacity
+//               key={route.id}
+//               onPress={() => setCurrentRoute(route)}
+//             >
+//               <SingleRouteMap points={route.points} color={color} />
+//             </TouchableOpacity>
+//           );
+//         })}
+//
+//         {/* Текущая позиция */}
+//         {currentLocation && (
+//           <Marker
+//             coordinate={{
+//               latitude: currentLocation.coords.latitude,
+//               longitude: currentLocation.coords.longitude,
+//             }}
+//             pinColor="blue"
+//             title="You are here"
+//           />
+//         )}
+//       </MapView>
+//
+//       {/* Title */}
+//       {currentRoute && (
+//         <View style={styles.infoPanel}>
+//           <Text style={styles.title}>{currentRoute.title}</Text>
+//           {currentRoute.description && (
+//             <Text style={styles.description}>{currentRoute.description}</Text>
+//           )}
+//         </View>
+//       )}
+//     </View>
+//   );
+// };
+//
+// // Генерация разных цветов для маршрутов
+// const getColorForIndex = (index: number) => {
+//   const colors = [
+//     'tomato',
+//     'orange',
+//     'yellow',
+//     'green',
+//     'gold',
+//     'wheat',
+//     'linen',
+//     'tan',
+//     'aqua',
+//     'teal',
+//     'violet',
+//     'purple',
+//     'indigo',
+//     'turquoise',
+//     'navy',
+//     'plum',
+//   ];
+//   return colors[index % colors.length];
+// };
+//
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   loadingContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   infoPanel: {
+//     position: 'absolute',
+//     bottom: 20,
+//     left: 20,
+//     right: 20,
+//     padding: 15,
+//     borderRadius: 10,
+//     elevation: 3,
+//     backgroundColor: 'white',
+//     borderColor: colors.green.textBlock,
+//     borderWidth: 5,
+//   },
+//   title: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     marginBottom: 5,
+//   },
+//   description: {
+//     fontSize: 14,
+//     color: '#666',
+//   },
+// });
+//
+// export default MapScreen;

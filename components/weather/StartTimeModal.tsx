@@ -31,12 +31,12 @@ const StartTimeModal = ({ visible, onClose, onSave }: Props) => {
     let finalDate = new Date();
 
     if (inputDate) {
-      if (!inputDate.match(/^\d{1,2} \d{2} \d{4}$/)) {
+      if (!inputDate.match(/^\d{1,2}.\d{2}.\d{4}$/)) {
         Alert.alert(l.error, l.validationStartDateFormat);
         return;
       }
 
-      const [day, month, year] = inputDate.split(' ').map(Number);
+      const [day, month, year] = inputDate.split('.').map(Number);
       finalDate = new Date(year, month - 1, day, hours, minutes);
       if (isNaN(finalDate.getTime())) {
         Alert.alert(l.error, l.validationStartDateNumbers);

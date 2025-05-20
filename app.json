@@ -27,6 +27,8 @@
       "typedRoutes": true
     },
     "extra": {
+      "BASE_URL": "https://api.weatherapi.com/v1",
+      "API_KEY": "70f402928e384a678f152737250705",
       "eas": {
         "projectId": "4b27a672-d3d5-4ca5-b016-7318801b1279"
       }
@@ -34,11 +36,6 @@
     "plugins": [
       "expo-sqlite",
       ["expo-router", { "asyncRoutes": false }]
-    ],
-    "expo": {
-      "plugins": [
-
-      ]
-    }
+    ]
   }
 }
