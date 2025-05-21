@@ -3,7 +3,7 @@ import { RoutePoint } from '@/types/routes';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView from 'react-native-maps';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import SingleRouteMap from '@/components/route/SingleRouteMap';
 import { colors } from '@/constants/colors';
@@ -11,11 +11,13 @@ import { useLanguage } from '@/context/LanguageContext';
 
 import { calculateRegion } from '@/utils/calculateRegion';
 import SText from '@/components/ui/CustomFontText/SText';
+import GreenButton from '@/components/ui/GreenButton';
 
 const RouteMapPreview = () => {
   const { l } = useLanguage();
   const params = useLocalSearchParams();
   const [points, setPoints] = useState<RoutePoint[]>();
+  const router = useRouter();
 
   useEffect(() => {
       try {
@@ -53,6 +55,10 @@ const RouteMapPreview = () => {
       >
         <SingleRouteMap points={points} />
       </MapView>
+
+      <GreenButton onPress={() => router.back()}>
+        <SText style={styles.btnText}>{l.btnFinishViewing}</SText>
+      </GreenButton>
     </View>
   );
 };
@@ -86,6 +92,10 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 14,
     color: '#666',
+  },
+  btnText: {
+    fontSize: 30,
+    textAlign: 'center',
   },
 });
 

@@ -55,6 +55,7 @@ export const translations = {
     btnSetStartTime: 'Задать стартовое время',
     btnTryAgain: 'Повторить попытку',
     btnFlipRoute: 'Сменить направление',
+    btnFinishViewing: 'Завершить просмотр',
 
     // Ошибки
     error: 'Ошибка',
@@ -143,6 +144,7 @@ export const translations = {
     btnSetStartTime: 'Set the starting time',
     btnTryAgain: 'Try again',
     btnFlipRoute: 'Flip the route',
+    btnFinishViewing: 'End the viewing',
 
     // Errors
     error: 'Error',

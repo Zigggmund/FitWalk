@@ -7,7 +7,7 @@ import CustomHeader from '@/components/layout/CustomHeader';
 
 export default function MainLayout() {
   // для сокрытия на время создания маршрута
-  const hideLayout = usePathname() === '/savingARoute';
+  const hideLayout = ['/savingARoute', '/routeMapPreview'].includes(usePathname());
 
   return (
     <View style={{ flex: 1 }}>
