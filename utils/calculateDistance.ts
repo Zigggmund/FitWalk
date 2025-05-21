@@ -13,7 +13,7 @@ export default function calculateDistance(points: LatLng[]): number {
     totalDistance += haversineDistance(prev, current);
   }
 
-  return totalDistance;
+  return Math.round(totalDistance);
 }
 
 function haversineDistance(coord1: LatLng, coord2: LatLng): number {

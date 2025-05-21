@@ -43,6 +43,7 @@ export const translations = {
     loading: 'Загрузка',
     dateMask: 'ДД.ММ.ГГГГ',
     timeMask: 'ЧЧ ММ',
+    meter: 'м',
 
     // Кнопки
     btnCancel: 'Отмена',
@@ -130,6 +131,7 @@ export const translations = {
     loading: 'Loading',
     dateMask: 'DD.MM.YYYY',
     timeMask: 'HH mm',
+    meter: 'm',
 
     // Buttons
     btnCancel: 'Cancel',

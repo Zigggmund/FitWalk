@@ -140,7 +140,7 @@ const RouteDetails = () => {
         />
         <BorderedBlockInput
           label={l.routeLength}
-          text={`${route.length} ${l.inMeters}`}
+          text={`${route.length} ${l.meter}`}
         />
 
         <GreenButton onPress={() => router.push(`/routes/map/${id}`)}>

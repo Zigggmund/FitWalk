@@ -40,8 +40,10 @@ const RootLayout = () => {
         await initDatabase();
         await checkDatabase();
         setDbInitialized(true);
-        await testDb();
+
+        // await testDb();
         // проверка данных
+
         // console.log('МАРШРУТЫ', await getAllRoutes());
         // console.log('ЯЗЫК', await getSetting('language'));
 
