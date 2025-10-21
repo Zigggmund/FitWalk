@@ -23,7 +23,15 @@ export const getSetting = async <T = string>(
       'SELECT value FROM app_settings WHERE key = ?',
       key,
     );
-    return result ? (JSON.parse(result.value) as T) : null;
+
+    if (!result) return null;
+
+    try {
+      return JSON.parse(result.value) as T;
+    } catch (e) {
+      console.warn(`Value for key "${key}" is not valid JSON. Returning raw value.`);
+      return result.value as unknown as T;
+    }
   } catch (error) {
     console.error('Error getting setting:', error);
     return null;

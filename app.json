@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zigmund.FitWalk",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +39,12 @@
     },
     "plugins": [
       "expo-sqlite",
-      ["expo-router", { "asyncRoutes": false }]
+      [
+        "expo-router",
+        {
+          "asyncRoutes": false
+        }
+      ]
     ]
   }
 }

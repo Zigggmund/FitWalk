@@ -14,14 +14,13 @@ export const initDatabase = async (): Promise<void> => {
       PRAGMA foreign_keys = ON;
     `);
 
+
     // Создаем таблицы
     await db.execAsync(`
       CREATE TABLE IF NOT EXISTS app_settings (
         key TEXT PRIMARY KEY,
         value TEXT DEFAULT NULL
       );
-      INSERT OR IGNORE INTO app_settings (key, value)
-        VALUES ('language', 'en');
 
       CREATE TABLE IF NOT EXISTS routes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,6 +42,19 @@ export const initDatabase = async (): Promise<void> => {
       CREATE INDEX IF NOT EXISTS idx_route_points_routeId 
       ON route_points(routeId);
     `);
+
+    await db.runAsync(`DELETE FROM app_settings WHERE key = 'location_permission_requested'`);
+
+    await db.runAsync(
+      `INSERT OR IGNORE INTO app_settings (key, value) VALUES (?, ?)`,
+      'language',
+      JSON.stringify('en')
+    );
+    await db.runAsync(
+      `INSERT OR IGNORE INTO app_settings (key, value) VALUES (?, ?)`,
+      'location_permission_requested',
+      JSON.stringify(false)
+    );
 
     console.log('Database initialized successfully');
   } catch (error) {
