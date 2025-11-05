@@ -9,7 +9,7 @@ import SText from '@/components/ui/CustomFontText/SText';
 import { useLanguage } from '@/context/LanguageContext';
 import { RouterMarker } from '@/components/route/parts/RouterMarker';
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { RoutePoint } from '@/types/routes';
 
 const MIN_DISTANCE = 500; // метров
@@ -110,32 +110,33 @@ const CreatingARoute = () => {
     }, [locations]);
 
   const handleFinish = () => {
-    const startTimestamp = Date.now() - time * 1000;
+  const startTimestamp = Date.now() - time * 1000;
 
-    const fullRoutePoints: RoutePoint[] = [
-      {
-        routeId: 0,
-        latitude: locations[0].latitude,
-        longitude: locations[0].longitude,
-        pointType: 'start',
-        timestamp: startTimestamp,
-      },
-      ...routePoints.map((point, i) => ({
-        routeId: 0,
-        latitude: point.latitude,
-        longitude: point.longitude,
-        pointType: 'path' as const,
-        timestamp: startTimestamp + (i + 1) * 30 * 1000,
-      })),
-      {
-        routeId: 0,
-        latitude: locations[locations.length - 1].latitude,
-        longitude: locations[locations.length - 1].longitude,
-        pointType: 'end' as const,
-        timestamp: Date.now(),
-      },
-    ];
+  const fullRoutePoints: RoutePoint[] = [
+    {
+      routeId: 0,
+      latitude: locations[0].latitude,
+      longitude: locations[0].longitude,
+      pointType: 'start',
+      timestamp: startTimestamp,
+    },
+    ...routePoints.map((point, i) => ({
+      routeId: 0,
+      latitude: point.latitude,
+      longitude: point.longitude,
+      pointType: 'path' as const,
+      timestamp: startTimestamp + (i + 1) * 30 * 1000,
+    })),
+    {
+      routeId: 0,
+      latitude: locations[locations.length - 1].latitude,
+      longitude: locations[locations.length - 1].longitude,
+      pointType: 'end' as const,
+      timestamp: Date.now(),
+    },
+  ];
 
+  if (distance < 1) {
     router.push({
       pathname: '/savingARoute',
       params: {
@@ -144,7 +145,11 @@ const CreatingARoute = () => {
         points: JSON.stringify(fullRoutePoints),
       },
     });
-  };
+  } else {
+    Alert.alert(l.error, l.validationRouteLength);
+    return;
+  }
+};
 
   return (
     <View style={styles.container}>
