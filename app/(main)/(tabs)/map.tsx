@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 import SingleRouteMap from '@/components/route/SingleRouteMap';
 import SText from '@/components/ui/CustomFontText/SText';
@@ -18,6 +20,7 @@ const MapScreen = () => {
   const [routes, setRoutes] = useState<RouteWithPoints[]>([]);
   const [loading, setLoading] = useState(true);
 
+  //  при открытии экрана
   useEffect(() => {
     const loadRoutes = async () => {
       try {
@@ -67,7 +70,22 @@ const MapScreen = () => {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.container}>
+      <MapView
+        style={styles.container}
+        initialRegion={
+          currentLocation
+            ? {
+                latitude: currentLocation.coords.latitude,
+                longitude: currentLocation.coords.longitude,
+                latitudeDelta: 0.2,      // в 10 раз слабее приближение, чем стандартное 0.01
+                longitudeDelta: 0.2,
+              }
+            : undefined
+        }
+        showsUserLocation={true}
+        followsUserLocation={false}
+        showsMyLocationButton={true}
+      >
         {routes.map((route, index) => {
           const color = getColorForIndex(index);
           return (

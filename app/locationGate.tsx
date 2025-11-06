@@ -9,7 +9,7 @@ import {
 import { useLocation } from '@/context/LocationContext';
 import { useLanguage } from '@/context/LanguageContext';
 
-export const LocationGate = ({ children }: { children: React.ReactNode }) => {
+const LocationGate = ({ children }: { children: React.ReactNode }) => {
   const { permissionGranted, retryRequest } = useLocation();
   const { l } = useLanguage();
 
@@ -34,3 +34,5 @@ const styles = StyleSheet.create({
   },
   text: { fontSize: 16, textAlign: 'center', marginBottom: 20 },
 });
+
+export default LocationGate

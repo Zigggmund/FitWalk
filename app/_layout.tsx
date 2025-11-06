@@ -13,7 +13,7 @@ import { LocationProvider } from '@/context/LocationContext';
 
 import LoadingScreen from './loading';
 
-import { LocationGate } from '@/app/locationGate';
+import LocationGate from '@/app/locationGate';
 import SensationFont from '@/assets/fonts/Sansation-Regular.ttf';
 import { checkDatabase, initDatabase } from '@/services/db';
 import { getSetting, setSetting } from '@/services/settingsRepository';

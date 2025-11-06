@@ -6,7 +6,6 @@ import MapView from 'react-native-maps';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import SingleRouteMap from '@/components/route/SingleRouteMap';
-import { colors } from '@/constants/colors';
 import { useLanguage } from '@/context/LanguageContext';
 
 import { calculateRegion } from '@/utils/calculateRegion';
@@ -56,9 +55,11 @@ const RouteMapPreview = () => {
         <SingleRouteMap points={points} />
       </MapView>
 
-      <GreenButton onPress={() => router.back()}>
-        <SText style={styles.btnText}>{l.btnFinishViewing}</SText>
-      </GreenButton>
+      <View style={styles.infoPanel}>
+        <GreenButton onPress={() => router.back()}>
+          <SText style={styles.btnText}>{l.btnFinishViewing}</SText>
+        </GreenButton>
+      </View>
     </View>
   );
 };
@@ -74,15 +75,9 @@ const styles = StyleSheet.create({
   },
   infoPanel: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 40,
     left: 20,
     right: 20,
-    padding: 15,
-    borderRadius: 10,
-    elevation: 3,
-    backgroundColor: 'white',
-    borderColor: colors.green.textBlock,
-    borderWidth: 5,
   },
   title: {
     fontSize: 18,

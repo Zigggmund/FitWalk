@@ -76,7 +76,7 @@ export const translations = {
     errorUnableToGetLocation: 'Не удалось определить текущее местоположение. Убедитесь, что службы геолокации включены.',
 
     // Валидация
-    validationRouteLength: 'Дистанция должна быть больше 0 м',
+    validationRouteLength: 'Маршрут слишком короткий, не удалось записать точки',
     validationTimeIsNumber: 'Время должно быть числом',
     validationTimeIsPositive: 'Время должно быть больше 0',
     validationName: 'Укажите название маршрута',
@@ -166,7 +166,7 @@ export const translations = {
     errorUnableToGetLocation: 'Unable to determine current location. Make sure location services are enabled.',
 
     // Валидация
-    validationRouteLength: 'Route length must be greater then 0 meters',
+    validationRouteLength: 'The route is too short, unable to record points',
     validationTimeIsNumber: 'Travel time must be a number',
     validationTimeIsPositive: 'The time must be greater then 0',
     validationName: 'Route name is required',
