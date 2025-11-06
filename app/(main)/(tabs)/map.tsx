@@ -2,10 +2,8 @@ import { Route, RouteWithPoints } from '@/types/routes';
 
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
-import { useFocusEffect } from '@react-navigation/native';
-import { useCallback } from 'react';
 
 import SingleRouteMap from '@/components/route/SingleRouteMap';
 import SText from '@/components/ui/CustomFontText/SText';
@@ -99,16 +97,16 @@ const MapScreen = () => {
         })}
 
         {/* Текущая позиция */}
-        {currentLocation && (
-          <Marker
-            coordinate={{
-              latitude: currentLocation.coords.latitude,
-              longitude: currentLocation.coords.longitude,
-            }}
-            pinColor="blue"
-            title="You are here"
-          />
-        )}
+        {/*{currentLocation && (*/}
+        {/*  <Marker*/}
+        {/*    coordinate={{*/}
+        {/*      latitude: currentLocation.coords.latitude,*/}
+        {/*      longitude: currentLocation.coords.longitude,*/}
+        {/*    }}*/}
+        {/*    pinColor="blue"*/}
+        {/*    title="You are here"*/}
+        {/*  />*/}
+        {/*)}*/}
       </MapView>
 
       {/* Title */}

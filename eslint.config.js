@@ -45,7 +45,7 @@ export default tseslint.config(
             // Internal packages.
             // api
             ['^@?\\/api'],
-            // api
+            // utils
             ['^@?\\/utils'],
             // misc
             ['^@?\\/[^(ui|api|utils)]'],

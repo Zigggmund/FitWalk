@@ -8,8 +8,8 @@ import { useLocalSearchParams } from 'expo-router';
 import RouteHeader from '@/components/route/RouteHeader';
 import SText from '@/components/ui/CustomFontText/SText';
 import GreenButton from '@/components/ui/GreenButton';
-import StartTimeModal from '@/components/weather/StartTimeModal';
-import { WeatherPanel } from '@/components/WeatherPanel';
+import StartTimeModal from '@/components/StartTimeModal';
+import { WeatherPanel } from '@/components/weather/WeatherPanel';
 import { colors } from '@/constants/colors';
 import { useLanguage } from '@/context/LanguageContext';
 

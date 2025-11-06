@@ -13,7 +13,7 @@ import {
 import RouteItem from '@/components/route/RouteItem';
 import SText from '@/components/ui/CustomFontText/SText';
 import Line from '@/components/ui/parts/Line';
-import { WeatherPanel } from '@/components/WeatherPanel';
+import { WeatherPanel } from '@/components/weather/WeatherPanel';
 import { useLanguage } from '@/context/LanguageContext';
 
 import { getAllRoutes } from '@/services/routeRepository';

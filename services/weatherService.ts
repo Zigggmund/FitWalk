@@ -10,7 +10,7 @@ export const getCurrentWeather = async (
 ): Promise<WeatherData> => {
   try {
     const response = await fetch(
-      `http://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=auto`,
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=auto`,
     );
     const data = await response.json();
     const current = data.current;
@@ -34,7 +34,7 @@ export const getWeatherForecast = async (
 ): Promise<WeatherData> => {
   try {
     const response = await fetch(
-      `http://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weather_code,wind_speed_10m&timezone=auto`,
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weather_code,wind_speed_10m&timezone=auto`,
     );
     if (!response.ok) {
       const text = await response.text(); // чтобы увидеть HTML-ошибку
